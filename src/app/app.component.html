@@ -1,0 +1,191 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+   <a class="navbar-brand" style="color:white;">SearcherApp</a>
+   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+   <span class="navbar-toggler-icon"></span>
+   </button>
+   <div class="collapse navbar-collapse" id="navbarColor02">
+     <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+           <a href="/" class="nav-link"> Home </a>
+           <a class="nav-link" (click)="onOpenModal(null!, 'add')">Add searcher <!--use a non-null assertion.-->
+           <span class="sr-only">(current)</span></a>
+        </li>
+     </ul>
+     <form class="form-inline my-2 my-lg-0">
+         <input type="text"(ngModelChange)="findSearchers(key.value)" #key="ngModel" ngModel
+          name="key" id="searchName" class="form-control mr-sm-2"  placeholder="Find searchers...">
+     </form>
+  </div>
+ </nav>
+   
+ <div class="container" id="main-container">
+ <div class="row">
+   <div *ngFor="let searcher of searchers" class="col-md-6 col-xl-3">
+      <div class="card m-b-30">
+         <div class="card-body row">
+               <img src="" class="img-fluid">
+            <div class="col-6 card-title align-self-center mb-0">
+               <h5>{{searcher?.name}}</h5>
+               <p class="m-0">{{searcher?.gender}}</p>
+            </div>
+         </div>
+         <ul class="list-group list-group-flush">
+            <li class="list-group-item"><i class="fa fa-envelope float-right"></i>{{searcher?.email}}</li>
+            <li class="list-group-item"><i class="fa fa-phone float-right"></i>Phone : {{searcher?.phone}}</li>
+         </ul>
+         <div class="card-body">
+            <div class="float-right btn-group btn-group-sm">
+               <a (click)="onOpenModal(searcher, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+               <a (click)="onOpenModal(searcher, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+ 
+ 
+ <!-- Add Searcher window -->
+ <div class="modal fade" id="addSearcherModal" tabindex="-1" role="dialog" aria-labelledby="addSearcherModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="addSearcherModalLabel">Add searcher</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true" id="add-searcher-form" >&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+           <form #addForm="ngForm" (ngSubmit)="onAddSearcher(addForm)" >
+            <div  class="form-group">
+              <label for="name">Name</label>
+              <input type="text" [(ngModel)]="searcher.name" name="name" class="form-control" id="name" placeholder="Name" required>
+           </div>
+           <div class="form-group">
+             <label for="password">Password</label>
+             <input #password="ngModel" type="password"  [(ngModel)]="searcher.password" name="password" class="form-control" id="password" placeholder="Password" maxlength="32" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%?&])[A-Za-z\d$@$!%?&]{8,}$" required>
+             <div class="alert alert-danger" [hidden]="password.valid || password.pristine ">Password should be at least 8 characters in length and include special characters and numbers. </div>
+           </div>
+           <div class="form-group">
+              <label for="email">Email Address</label>
+              <input #emailAdd="ngModel" type="email"  [(ngModel)]="searcher.email" name="email" class="form-control" id="email" placeholder="Email" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>   
+              <div class="alert alert-danger" [hidden]="emailAdd.valid || emailAdd.pristine "> Email is invalid.</div>  
+           </div>
+            <label for="email">Gender: </label>
+            <div class="form-group">
+            <div class="form-check form-check-inline mb-0 me-4">
+               <input type="radio" [(ngModel)]="searcher.gender" name="gender" class="form-control" id="gender" placeholder="Gender" required
+                 value="Female" />
+               <label class="form-check-label" for="femaleGender">Female</label>
+            </div>
+             <div class="form-check form-check-inline mb-0 me-4">
+               <input type="radio" [(ngModel)]="searcher.gender" name="gender" class="form-control" id="gender" placeholder="Gender" required
+                 value="Male" />
+               <label class="form-check-label" for="maleGender">Male</label>
+             </div>
+             <div class="form-check form-check-inline mb-0">
+               <input type="radio" [(ngModel)]="searcher.gender" name="gender" class="form-control" id="gender" placeholder="Gender" required
+                 value="Other" />
+               <label class="form-check-label" for="otherGender">Other</label>
+             </div>
+            </div>  
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input #phone="ngModel"  type="tel" [(ngModel)]="searcher.phone" name="phone" class="form-control" id="phone" placeholder="+7(900)000-00-00" maxlength="12"  pattern="\+7\s?[\(]{0,1}9[0-9]{2}[\)]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}" >
+              <div class="alert alert-danger" [hidden]="phone.valid || phone.pristine || phone.untouched">Phone number is invalid. </div>
+            </div>
+            <div class="modal-footer">
+              <button  [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+           </div>
+         </form>
+        </div>
+      </div>
+   </div>
+   </div>
+ 
+ <!-- Edit window -->
+ <div class="modal fade" id="updateSearcherModal" tabindex="-1" role="dialog" aria-labelledby="searcherEditModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="updateSearcherModalLabel">Edit searcher {{editSearcher?.name}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" >&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <form #editForm="ngForm">   
+               <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" ngModel="{{editSearcher?.name}}" name="name" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Name" required>
+               </div>
+               <input type="hidden" ngModel="{{editSearcher?.id }}" name="id" class="form-control" id="id" placeholder="Email">
+               <input type="hidden" ngModel="{{editSearcher?.searcherCode}}" name="searcherCode" class="form-control" id="searcherCode" placeholder="Email">
+               <div class="form-group">
+                  <label for="password">Password</label>
+                  <input #passwordEdit="ngModel"  type="password" ngModel="{{editSearcher?.password}}" name="password" class="form-control" id="password" placeholder="Password" maxlength="32" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%?&])[A-Za-z\d$@$!%?&]{8,}$" required>
+                  <div class="alert alert-danger" [hidden]="passwordEdit.valid || passwordEdit.pristine ">Password should be at least 8 characters in length and include special characters and numbers. </div>
+               </div>
+               <div class="form-group">
+                  <label for="email">Email Address</label>
+                  <input  #emailEdit="ngModel" type="email" ngModel="{{editSearcher?.email}}" name="email" class="form-control" id="email" placeholder="Email" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"  required>
+                  <div class="alert alert-danger" [hidden]="emailEdit.valid || emailEdit.pristine "> Email is invalid.</div>  
+               </div>
+                 <label for="gender">Gender: </label>
+                 <div class="form-group">
+                  <input type="hidden" ngModel="{{editSearcher?.gender}}" name="gender" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Name" required>
+                   <div class="form-check form-check-inline mb-0 me-4">
+                     <input type="radio" ngModel name="gender"  class="form-control" id="gender" placeholder="Gender" value="Female" required>
+                     <label class="form-check-label" for="femaleGender" >Female</label>
+                   </div>
+                   <div class="form-check form-check-inline mb-0 me-4">
+                     <input type="radio" ngModel name="gender" class="form-control" id="gender" placeholder="Gender"  value="Male" required>
+                     <label class="form-check-label" for="maleGender">Male</label>
+                   </div>
+                   <div class="form-check form-check-inline mb-0">
+                     <input type="radio" ngModel name="gender" class="form-control" id="gender" placeholder="Gender" value="Other" required>
+                     <label class="form-check-label" for="otherGender">Other</label>
+                   </div>
+                  </div> 
+               <div class="form-group">
+                  <label for="phone">Phone</label>
+                  <input  #phoneEdit="ngModel" type="tel" ngModel name="phone" ngModel="{{editSearcher?.phone}}" name="phone" class="form-control" id="phone" name="phone"placeholder="+7(900)000-00-00" maxlength="12" pattern="\+7\s?[\(]{0,1}9[0-9]{2}[\)]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}" >
+                  <div class="alert alert-danger" [hidden]="phoneEdit.valid || phoneEdit.pristine || phoneEdit.untouched">Phone number is invalid. </div>
+               </div>
+               <div class="modal-footer">
+                  <button  [disabled]="editForm.invalid" (click)="onUpdateSearcher(editForm.value)" data-dismiss="modal" class="btn btn-primary" >Save changes</button>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+ </div>
+ 
+ <!-- Delete window -->
+ <div class="modal fade" id="deleteSearcherModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="deleteModelLabel">Delete searcher</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <p>Are you sure you want to delete searcher {{deleteSearcher?.name}}?</p>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+               <button (click)="onDeleteSearcher(deleteSearcher.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+            </div>
+         </div>
+      </div>
+   </div>
+ </div>
+ </div>
+ 
+ <!-- Notification for no searchers -->
+ <div  *ngIf="searchers?.length == 0" class="col-lg-12 col-md-12 col-xl-12" id="filter">
+ <div class="alert alert-info" role="alert">
+   <h4 class="alert-heading" >No searchers!</h4>
+   <p>No searchers were found.</p>
+ </div>
+ </div>
