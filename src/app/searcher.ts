@@ -5,5 +5,6 @@ export interface Searcher{
     email: string;
     gender: string;
     phone: string;
-    searcherCode: string
+    searcherCode: string;
+    imageURL: string;
 }

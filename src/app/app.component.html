@@ -20,10 +20,13 @@
    
  <div class="container" id="main-container">
  <div class="row">
+
    <div *ngFor="let searcher of searchers" class="col-md-6 col-xl-3">
       <div class="card m-b-30">
          <div class="card-body row">
-               <img src="" class="img-fluid">
+            <div class="col-6">
+               <img class="img-fluid rounded-circle w-100"  [src]=" searcher.imageURL ? searcher.imageURL: '/assets/image/stock.jpg'" />
+             </div>
             <div class="col-6 card-title align-self-center mb-0">
                <h5>{{searcher?.name}}</h5>
                <p class="m-0">{{searcher?.gender}}</p>
@@ -57,6 +60,11 @@
         <div class="modal-body">
            <form #addForm="ngForm" (ngSubmit)="onAddSearcher(addForm)" >
             <div  class="form-group">
+                <img class="img" [src]="imageUrl ? imageUrl: '/assets/image/stock.jpg'"  />
+                  <a (click)="AddinputField.click()" class="btn btn-primary tooltips" data-placement="top" data-original-title="AddInput"><i class="fa fa-plus"></i></a>   
+                  <input #AddinputField hidden type="file" accept=".jpeg,.jpg,.png,.svg"  class="form-control"  data-original-title="AddInput"  (change)="onFileSelected($event, 'addInput')" > 
+            </div>
+            <div  class="form-group">
               <label for="name">Name</label>
               <input type="text" [(ngModel)]="searcher.name" name="name" class="form-control" id="name" placeholder="Name" required>
            </div>
@@ -64,14 +72,14 @@
              <label for="password">Password</label>
              <input #password="ngModel" type="password"  [(ngModel)]="searcher.password" name="password" class="form-control" id="password" placeholder="Password" maxlength="32" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%?&])[A-Za-z\d$@$!%?&]{8,}$" required>
              <div class="alert alert-danger" [hidden]="password.valid || password.pristine ">Password should be at least 8 characters in length and include special characters and numbers. </div>
-           </div>
+           </div> 
            <div class="form-group">
               <label for="email">Email Address</label>
               <input #emailAdd="ngModel" type="email"  [(ngModel)]="searcher.email" name="email" class="form-control" id="email" placeholder="Email" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>   
               <div class="alert alert-danger" [hidden]="emailAdd.valid || emailAdd.pristine "> Email is invalid.</div>  
            </div>
             <label for="email">Gender: </label>
-            <div class="form-group">
+            <div class="form-group">  
             <div class="form-check form-check-inline mb-0 me-4">
                <input type="radio" [(ngModel)]="searcher.gender" name="gender" class="form-control" id="gender" placeholder="Gender" required
                  value="Female" />
@@ -94,7 +102,7 @@
               <div class="alert alert-danger" [hidden]="phone.valid || phone.pristine || phone.untouched">Phone number is invalid. </div>
             </div>
             <div class="modal-footer">
-              <button  [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+              <button  [disabled]="addForm.invalid"  type="submit" class="btn btn-primary"  >Save changes</button>
            </div>
          </form>
         </div>
@@ -113,7 +121,12 @@
             </button>
          </div>
          <div class="modal-body">
-            <form #editForm="ngForm">   
+            <form #editForm="ngForm">  
+               <div class="form-group" >
+                  <img class="img"  [src]="editSearcher?.imageURL ?  editSearcher.imageURL: 'assets/image/stock.jpg'" />
+                  <a (click)="inputField.click()" class="btn btn-primary tooltips" data-placement="top" data-original-title="editInput" ><i class="fa fa-file"></i></a>   
+                  <input #inputField hidden type="file" accept=".jpeg,.jpg,.png,.svg"  class="form-control" data-original-title="editInput" (change)="onFileSelected($event, 'editInput')" required> 
+               </div> 
                <div class="form-group">
                   <label for="name">Name</label>
                   <input type="text" ngModel="{{editSearcher?.name}}" name="name" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Name" required>
