@@ -1,0 +1,76 @@
+<div class="container">
+  <section class="vh-100">
+       <div class="container py-5 h-100">
+         <div class="row d-flex align-items-center justify-content-center h-100">
+        
+           <div class="col-md-8 col-lg-7 col-xl-6">
+             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
+               class="img-fluid" alt="Phone image">
+           </div>
+           <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+               
+               <!-- Email input -->
+               <form
+               *ngIf="!isLoggedIn"
+               name="form"
+               (ngSubmit)="f.form.valid && onSubmit()"
+               #f="ngForm"
+               novalidate
+             >
+              <h2>Авторизуйтесь!</h2>
+               <div class="form-outline mb-4">
+                 <label class="form-label" for="name">Логин</label>
+                <input
+                type="text"
+                class="form-control form-control-lg"
+                name="name"
+                [(ngModel)]="form.name"
+                required
+                 placeholder="Логин"
+                #name="ngModel"
+                minlength="3"
+                maxlength="20"
+              />
+                
+                 <div class="alert alert-danger" [hidden]="name.valid || name.pristine "> Имя должно состоять хотя бы из 3-ёх букв. </div>  
+               </div>
+               <!-- Password input -->
+               <div class="form-outline mb-4">
+                <label class="form-label" for="form1Example23">Пароль</label>
+                  <input type="password"
+                  name="password"
+                  [(ngModel)]="form.password"
+                  id="password"
+                  minlength="6"
+                  #password="ngModel"
+                  placeholder="Пароль"
+                  maxlength="32"
+                  pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%?&])[A-Za-z\d$@$!%?&]{8,}$"
+                  required
+                  class="form-control form-control-lg" />
+                  
+                  <div class="alert alert-danger" [hidden]="password.valid || password.pristine">Пароль должен иметь длину не менее 8 символов и включать специальные символы и цифры.</div>
+                  </div>
+               
+               <div class="d-flex justify-content-around align-items-center mb-4">
+                 <!-- Checkbox -->
+                 <div class="form-check">
+                   <input class="form-check-input" type="checkbox" value="" id="form1Example3" checked />
+                   <label class="form-check-label" for="form1Example3"> Запомнить меня </label>
+                 </div>   
+               </div>
+               <!-- Submit button -->
+             <button class="btn btn-primary btn-lg btn-block">Войти</button>
+             <div class="form-group">
+              <div
+                class="alert alert-danger"
+                role="alert"
+                *ngIf="f.submitted && isLoginFailed">
+                Login failed: {{ errorMessage }}</div>
+            </div>
+            </form> 
+         </div>
+       </div>
+    </div>
+  </section>
+</div>      

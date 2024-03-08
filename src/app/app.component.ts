@@ -1,81 +1,73 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Searcher } from './searcher';
-import { SearcherService, } from './searcher.service';
+import { User } from './models/user';
+import { UserService, } from './_services/user.service';
 import { ImageService } from './image/image.service';
+import { TokenStorageService } from './_services/token-storage.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./component.css',],
+  styleUrls: ['./app.component.css',],
 
 })
 export class AppComponent implements OnInit {
+  title: 'userapp';
+   
 
-  title = 'searcherapp';
-
-  searcher: Searcher = {
+  user: User = {
     id: 0,
     name: '',
     password: '',
     email: '',
     gender: '',
     phone: '',
-    searcherCode: '',
     imageURL: ''
   }
 
-  public searchers: Searcher[];
-  public editSearcher: Searcher;
-  public deleteSearcher: Searcher;
-  public filter: Searcher;
+  public users: User[];
+  public edituser: User;
+  public deleteuser: User;
+  public filter: User;
 
   selectedFile: File;
   imageUrl: any;  // для отправки выбранного фото при добавлении
   editImageUrl: any; // для отправки выбранного фото при редактировании. Две разные переменные для двух разных мод.окон
-  searcherImages: any[];
+  userImages: any[];
 
-  constructor(private searcherService: SearcherService, private imageService: ImageService) { }
+  private roles: string[] = [];
+  public isLoggedIn = false;
+  showAdminBoard = false;
+  name?: string;
+
+
+  constructor(private userService: UserService, private imageService: ImageService,
+    private tokenStorageService: TokenStorageService) { }
 
   ngOnInit() {
-    this.getSearchers();
+    this.getusers();
+    this.isLoggedIn = !!this.tokenStorageService.getToken();
+    if (this.isLoggedIn) {
+      const user = this.tokenStorageService.getUser();
+      this.roles = user.roles;
+      this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
+      this.name = user.name;
+    }
   }
-
-  onFileSelected(event: any, mode: string) {
-    this.selectedFile = event.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(event.target.files[0]);
-    reader.onload = (ev: any) => {
-      if (mode === 'editInput') {
-        console.log("editInput",)
-        this.editSearcher.imageURL = ev.target.result;
-        this.editImageUrl = this.editSearcher.imageURL;
-      }
-      if (mode === 'addInput') {
-        console.log("addInput",)
-        this.imageUrl = ev.target.result;
-      }
-    };
-  }
-
-  saveNewImage(searcher: Searcher, img: any) {
-    this.imageService.uploadProfileImage(searcher, img.split(/,(.+)/)[1])
-  }
-  public getSearchers(): void {
-    this.searcherService.getSearchers().subscribe({
-      next: (response: Searcher[]) => {
+  public getusers(): void {
+    this.userService.getUsers().subscribe({
+      next: (response: User[]) => {
         this.getAllImages();
-        this.searchers = response;
+        this.users = response;
 
-        this.searcher = {
+        this.user = {
           id: 0,
           name: '',
           password: '',
           email: '',
           gender: '',
           phone: '',
-          searcherCode: '',
           imageURL: ''
         }
         this.imageUrl = ''
@@ -85,46 +77,49 @@ export class AppComponent implements OnInit {
       }
     });
   }
+
+  onFileSelected(event: any, mode: string) {
+    this.selectedFile = event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]);
+    reader.onload = (ev: any) => {
+      if (mode === 'editInput') {
+        console.log("editInput",)
+        this.edituser.imageURL = ev.target.result;
+        this.editImageUrl = this.edituser.imageURL;
+      }
+      if (mode === 'addInput') {
+        console.log("addInput",)
+        this.imageUrl = ev.target.result;
+      }
+    };
+  }
+
+  saveNewImage(user: User, img: any) {
+    this.imageService.uploadProfileImage(user, img.split(/,(.+)/)[1])
+  }
+
   getAllImages() {
     this.imageService.getAllProfileImages().subscribe(images => {
-      this.searcherImages = images;
-      this.searchers.map((searcher) => {
-        this.searcherImages.map((entry) => {
-          if (searcher.id == entry.id) {
-            searcher.imageURL = entry.path
-            this.editSearcher = entry.path
+      this.userImages = images;
+      this.users.map((user) => {
+        this.userImages.map((entry) => {
+          if (user.id == entry.id) {
+            user.imageURL = entry.path
+            this.edituser = entry.path
           }
         });
       });
     });
   }
-
-  public onAddSearcher(addForm: NgForm) {
-    document.getElementById('add-searcher-form')?.click();
-    this.searcherService.addSearcher(addForm.value).subscribe({
-      next: (response: Searcher) => {
-        this.searcher = response; // при сохранении юзера на бэке, мы получаем в ответ его id и передаем этот id в метод для сохранении аватарки
-        if (this.imageUrl) {
-          this.saveNewImage(this.searcher, this.imageUrl)
-        }
-        this.getSearchers();
-        addForm.reset();
-      },
-      error: (error: HttpErrorResponse) => {
-        alert(error.message);
-        addForm.reset();
-      }
-    });
-  }
-
-  public onUpdateSearcher(searcher: Searcher): void {
-    this.searcherService.updateSearcher(searcher).subscribe({
-      next: (response: Searcher) => {
-        this.searcher = response;
+  public onUpdateuser(user: User): void {
+    this.userService.updateuser(user).subscribe({
+      next: (response: User) => {
+        this.user = response;
         if (this.editImageUrl) {
-          this.saveNewImage(this.searcher, this.editImageUrl)
+          this.saveNewImage(this.user, this.editImageUrl)
         }
-        this.getSearchers();
+        this.getusers();
       },
       error: (error: HttpErrorResponse) => {
         alert(error.message);
@@ -132,11 +127,11 @@ export class AppComponent implements OnInit {
     });
   }
 
-  public onDeleteSearcher(searcherId: number): void {
-    this.searcherService.deleteSearcher(searcherId).subscribe({
+  public onDeleteuser(userId: number): void {
+    this.userService.deleteuser(userId).subscribe({
       next: (response: void) => {
-        this.imageService.deleteImage(searcherId)
-        this.getSearchers();
+        this.imageService.deleteImage(userId)
+        this.getusers();
       },
       error: (error: HttpErrorResponse) => {
         alert(error.message);
@@ -144,39 +139,24 @@ export class AppComponent implements OnInit {
     });
   }
 
-  public findSearchers(key: string): void {
+  public findusers(key: string): void {
     console.log(key)
-    const results: Searcher[] = [];
-    for (const searcher of this.searchers) {
-      if (searcher.name.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
-        results.push(searcher);
+    const results: User[] = [];
+    for (const user of this.users) {
+      if (user.name.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
+        results.push(user);
       }
     }
-    this.searchers = results;
+    this.users = results;
     if (results.length === 0 || !key) {
-      this.getSearchers();
+      this.getusers();
 
     }
   }
 
-  public onOpenModal(searcher: Searcher, mode: string): void {
-    const container = document.getElementById('main-container');
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.style.display = 'none';
-    button.setAttribute('data-toggle', 'modal');
-    if (mode === 'add') {
-      button.setAttribute('data-target', '#addSearcherModal');
-    }
-    if (mode === 'edit') {
-      this.editSearcher = searcher;
-      button.setAttribute('data-target', '#updateSearcherModal');
-    }
-    if (mode === 'delete') {
-      this.deleteSearcher = searcher;
-      button.setAttribute('data-target', '#deleteSearcherModal');
-    }
-    container?.appendChild(button);
-    button.click();
+  
+  logout(): void {
+    this.tokenStorageService.signOut();
+    window.location.reload();
   }
 }

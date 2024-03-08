@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "searcherapp": {
+    "userapp": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/searcherapp",
+            "outputPath": "dist/userapp",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -59,15 +59,15 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-          "browserTarget": "searcherapp:build",
+          "browserTarget": "userapp:build",
           "proxyConfig": "src/proxy.conf.json"
           },
           "configurations": {
             "production": {
-              "browserTarget": "searcherapp:build:production"
+              "browserTarget": "userapp:build:production"
             },
             "development": {
-              "browserTarget": "searcherapp:build:development"
+              "browserTarget": "userapp:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -75,7 +75,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "searcherapp:build"
+            "browserTarget": "userapp:build"
           }
         },
         "test": {

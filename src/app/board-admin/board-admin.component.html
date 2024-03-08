@@ -1,0 +1,57 @@
+<!--
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+     <form class="form-inline my-2 my-lg-0">
+         <input type="text"(ngModelChange)="findUsers(key.value)" #key="ngModel" ngModel
+          name="key" id="searchName" class="form-control mr-sm-2"  placeholder="Find searchers...">
+     </form>
+ </nav>
+  -->
+<div class="container" id="main-container">
+<div style="margin-bottom: 50px;  font-weight:bold; border-bottom: solid #32a1ce;">Всего пользователей: {{usersCounter}}</div> 
+<div class="row">
+    <div class="col-md-6 col-xl-3" *ngFor="let user of users; let i = index">{{i+1}} 
+       <div class="card m-b-30">
+          <div class="card-body row">
+             <div class="col-6">
+                <img class="img-fluid rounded-circle w-100"  [src]=" user.imageURL ? user.imageURL: '/assets/image/stock.jpg'" />
+              </div>
+             <div class="col-6 card-title align-self-center mb-0">
+                <h5>{{user?.name}}</h5>
+                <p class="m-0">{{user?.gender}}</p>
+             </div>
+          </div>
+          <ul class="list-group list-group-flush">
+             <li class="list-group-item"><i class="fa fa-envelope float-right"></i> Почта: {{user?.email}}</li>
+             <li class="list-group-item"><i class="fa fa-phone float-right"></i>Телефон: {{user?.phone}}</li>
+          </ul>
+          <div class="card-body">
+             <div class="float-right btn-group btn-group-sm">
+         <!--       <a (click)="onOpenModal(user, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>-->
+                <a (click)="onOpenModal(user, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a> 
+             </div>
+          </div>
+       </div>
+    </div>
+</div>
+<!-- Delete window -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="deleteModelLabel">Удаление профиля</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <p>Удалить пользователя "<strong>{{deleteUser?.name}}"</strong>?</p> 
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Нет</button>
+               <button (click)="onDeleteUser(deleteUser.id)" class="btn btn-danger" data-dismiss="modal">Да</button>
+            </div>
+         </div>
+      </div>
+   </div>
+ </div>
+</div>
+

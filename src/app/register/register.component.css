@@ -1,0 +1,40 @@
+@import "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css";
+body {
+  background: #f5f5f5;
+}
+
+a {
+  cursor: pointer;
+}
+
+.navbar {
+  margin-bottom: 30px;
+}
+
+.main {
+  margin: auto;
+  margin-top: 70px;
+  margin-bottom: 10%;
+  border-radius: 10px;
+  border: rgb(0, 0, 0) solid 1px;
+  width: 35%;
+  height: 30%;
+  position: relative;
+}
+.h1 {
+  font-size: 22px;
+  text-align: center;
+  margin-bottom: 20px;
+  margin: 20px 20px 20px 20px ;
+}
+.form-control {
+  font-size: 15px;
+  margin-bottom: 5%;
+}
+.wraper_gender {
+  display: flex;
+}
+.wraper_gender2 {
+  margin-top: 15px;
+  margin-right: 150px;
+}

@@ -1,0 +1,119 @@
+<div class="container" id="main-container" *ngIf="currentUser; else loggedOut">    <!-- модальные окна включаются в контейнер -->
+  <div class="col-6">
+      <img class="img-fluid rounded-circle w-100"  [src]=" user.imageURL ? user.imageURL: '/assets/image/stock.jpg'" />
+    </div>
+    <div class="jumbotron"> 
+      <div class="float-right btn-group btn-group-sm">
+      <a (click)="onOpenModal(user, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+      <a (click)="onOpenModal(user, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
+   </div>
+      <h3>
+      <strong>{{ user.name }}</strong> 
+      </h3>
+    <p>
+      <strong>Email:</strong>
+      {{ user.email }}
+    </p>
+    <p>
+      <strong>Пол:</strong>
+      {{ user.gender }}
+    </p>
+   <p>
+      <strong>phone:</strong>
+      {{ user.phone }}
+    </p>
+    <strong>Roles:</strong>
+    <ul>
+      <li *ngFor="let role of currentUser.roles">
+        {{ role }}
+      </li>
+    </ul>
+ 
+  </div>
+ 
+
+<!-- Edit window -->
+<div class="modal fade" id="updateUserModal" tabindex="-1" role="dialog" aria-labelledby="userEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="updateUserModallLabel"><strong>Редактирование профиля </strong></h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+           <form #editForm="ngForm">
+            <div class="form-group" >
+               <img class="img"  [src]="editUser?.imageURL ?  editUser.imageURL: 'assets/image/stock.jpg'" />
+               <a (click)="inputField.click()" class="btn btn-primary tooltips" data-placement="top" data-original-title="editInput" ><i class="fa fa-file"></i></a>   
+               <input #inputField hidden type="file" accept=".jpeg,.jpg,.png,.svg"  class="form-control" data-original-title="editInput" (change)="onFileSelected($event, 'editInput')" required> 
+            </div> 
+              <div class="form-group">
+                 <label for="name">Имя</label>
+                 <input type="text" #nameEdit="ngModel" ngModel="{{editUser?.name}}" name="name" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Name">
+                 <div class="alert alert-danger" [hidden]="nameEdit.valid || nameEdit.pristine "> Имя должно состоять хотя бы из 3-ёх букв. </div>  
+
+              </div>
+              <label for="gender">Пол: </label>
+                 <div class="form-group">
+                  <input type="hidden" ngModel="{{editUser?.gender}}" name="gender" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Name" required>
+                  <div class="form-check form-check-inline mb-0 me-4">
+                     <input type="radio" ngModel name="gender" class="form-control" id="gender" placeholder="Gender"  value="Мужчина" required>
+                     <label class="form-check-label" for="maleGender">Мужской</label>
+                   </div>
+                   <div class="form-check form-check-inline mb-0 me-4">
+                     <input type="radio" ngModel name="gender"  class="form-control" id="gender" placeholder="Gender" value="Женщина" required>
+                     <label class="form-check-label" for="femaleGender" >Женский</label>
+                   </div>
+                 </div>
+                 <div class="form-group">
+                  <label for="email">Почта</label>
+                  <input type="email" ngModel="{{editUser?.email}}" name="email" class="form-control" id="email" placeholder="Email">
+                </div>
+              <input type="hidden" ngModel="{{editUser?.id}}" name="id" class="form-control" id="id" placeholder="Email">
+              <div class="form-group">
+               <label for="password">Пароль</label>
+               <input #passwordEdit="ngModel"  type="password" ngModel="{{editUser?.password}}" name="password" class="form-control" id="password" placeholder="Введите новый пароль" maxlength="32" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%?&])[A-Za-z\d$@$!%?&]{8,}$" required>
+               <div class="alert alert-danger" [hidden]="passwordEdit.valid || passwordEdit.pristine">Пароль должен иметь длину не менее 8 символов и включать специальные символы и цифры.</div>
+             </div>
+              <div class="form-group">
+                 <label for="phone">Телефон</label>
+                 <input   #phoneEdit="ngModel" type="text" ngModel="{{editUser?.phone}}" name="phone" class="form-control" id="phone" name="phone" placeholder="Phone">
+                 <div class="alert alert-danger" [hidden]="phoneEdit.valid || phoneEdit.pristine || phoneEdit.untouched">Номер телефона введён некорректно. </div>
+              </div>
+              <div class="modal-footer">
+                 <button [disabled]="editForm.invalid" (click)="onUpdateUser(editForm.value)" data-dismiss="modal" class="btn btn-primary">Сохранить</button>
+              </div>
+           </form>
+        </div>
+     </div>
+  </div>
+</div>
+
+<!-- Delete window -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="deleteModelLabel">Удаление профиля</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+           <p>Значит, прощаемся, <strong>{{deleteUser?.name}}</strong>?</p> 
+           <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Нет</button>
+              <button (click)="onDeleteUser(deleteUser.id)" class="btn btn-danger" data-dismiss="modal">Да</button>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>
+</div>
+<!-- конец контейнера -->
+
+  <ng-template #loggedOut>
+    Пожалуйста, авторизуйтесь.
+  </ng-template>
