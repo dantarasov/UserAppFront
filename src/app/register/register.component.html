@@ -140,15 +140,14 @@
         </button>
     
       </div>
-   
-    <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">
-    Signup failed!<br />{{ errorMessage }}
-  </div>
-  </form>
-  
-  <div class="alert alert-success" *ngIf="isSuccessful">
-    Your registration is successful!
-  </div>
+      <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">
+        Ошибка регистрации:<br />{{ errorMessage }}
+       </div>
+       </form>
+       
+       <div class="alert alert-success" *ngIf="isSuccessful">
+        Регистрация успешна!
+       </div>
   </div>
   
 </div>

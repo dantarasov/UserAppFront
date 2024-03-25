@@ -11,7 +11,7 @@
       <strong>{{ user.name }}</strong> 
       </h3>
     <p>
-      <strong>Email:</strong>
+      <strong>Почта:</strong>
       {{ user.email }}
     </p>
     <p>
@@ -19,10 +19,10 @@
       {{ user.gender }}
     </p>
    <p>
-      <strong>phone:</strong>
+      <strong>Телефон:</strong>
       {{ user.phone }}
     </p>
-    <strong>Roles:</strong>
+    <strong>Роли:</strong>
     <ul>
       <li *ngFor="let role of currentUser.roles">
         {{ role }}

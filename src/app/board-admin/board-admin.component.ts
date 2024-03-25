@@ -99,10 +99,11 @@ export class BoardAdminComponent implements OnInit {
   public onDeleteUser(userId: number): void {
     this.userService.deleteuser(userId).subscribe({
       next: (response: void) => {
-        const logout = document.getElementById('logout');
-        logout?.click();
+        // const logout = document.getElementById('logout');
+        // logout?.click();
         this.appComponent.isLoggedIn = false;
          this.imageService.deleteImage(userId)
+         this.getusers();
     
       },
       error: (error: HttpErrorResponse) => {

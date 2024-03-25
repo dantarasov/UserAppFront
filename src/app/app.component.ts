@@ -39,14 +39,13 @@ export class AppComponent implements OnInit {
   private roles: string[] = [];
   public isLoggedIn = false;
   showAdminBoard = false;
-  name?: string;
+  name: string;
 
 
   constructor(private userService: UserService, private imageService: ImageService,
     private tokenStorageService: TokenStorageService) { }
 
   ngOnInit() {
-    this.getusers();
     this.isLoggedIn = !!this.tokenStorageService.getToken();
     if (this.isLoggedIn) {
       const user = this.tokenStorageService.getUser();
@@ -60,7 +59,7 @@ export class AppComponent implements OnInit {
       next: (response: User[]) => {
         this.getAllImages();
         this.users = response;
-
+       
         this.user = {
           id: 0,
           name: '',

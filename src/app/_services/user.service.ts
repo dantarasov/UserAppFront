@@ -10,17 +10,17 @@ export class UserService {
 
 
   public getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(environment.API_URL + `auth/all`);
+    return this.http.get<User[]>(environment.API_URL + `all`);
   }
   public getUser(userId: number): Observable<User> {
-    return this.http.get<User>(environment.API_URL + `auth/find/${userId}`);
+    return this.http.get<User>(environment.API_URL + `find/${userId}`);
   }
      
   public updateuser(user: User): Observable<User> {
-    return this.http.put<User>(environment.API_URL + `auth/update`, user);    
+    return this.http.put<User>(environment.API_URL + `update`, user);    
   }
   public deleteuser(userId: number): Observable<void> {
-    return this.http.delete<void>(environment.API_URL + `auth/delete/${userId}`);    
+    return this.http.delete<void>(environment.API_URL + `delete/${userId}`);    
   }
   
   getPublicContent(): Observable<any> {

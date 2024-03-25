@@ -40,15 +40,16 @@ export class RegisterComponent implements OnInit {
     this.authService.register(name, gender, email, password, phone).subscribe({
       next: (response: User) => {
         this.user = response; 
-        this.gotoLogin();
         if (this.imageURL) {
           this.saveNewImage(this.user, this.imageURL)
         }
         this.isSuccessful = true;
         this.isSignUpFailed = false;
+        this.gotoLogin();
       },
       error: (error: HttpErrorResponse) => {
         alert(error.message);
+        this.errorMessage = error.error.message;
         this.isSignUpFailed = true;
       }   
   });
@@ -68,7 +69,7 @@ export class RegisterComponent implements OnInit {
     this.imageService.uploadProfileImage(user, img.split(/,(.+)/)[1])
   }
 
-   gotoLogin(){
-   this.router.navigate(['/login']);
+  async gotoLogin(){
+   await this.router.navigate(['/login']);
   }
 }

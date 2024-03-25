@@ -45,7 +45,8 @@ export class ProfileComponent implements OnInit {
     this.userService.getUser(this.user.id).subscribe({
       next: (response: User) => {
         this.getImage();
-        this.user = response
+        this.user = response;
+        this.appComponent.name = this.user.name;
       },
       error: (error: HttpErrorResponse) => {
         alert(error.message);
@@ -97,6 +98,9 @@ export class ProfileComponent implements OnInit {
   public onDeleteUser(userId: number): void {
     this.userService.deleteuser(userId).subscribe({
       next: (response: void) => {
+        if(this.currentUser.roles== 'ROLE_ADMIN'){
+          
+        }
         const logout = document.getElementById('logout');
         logout?.click();
         this.appComponent.isLoggedIn = false;
